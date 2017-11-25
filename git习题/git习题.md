@@ -14,11 +14,11 @@
   - 新建一个文件夹
   - 在git bash 里 cd 到新建文件夹哪里
 
-   ![图片](../image/1.png "cd 操作")
+    ![图片](https://github.com/skomefen/team_example/blob/master/git%E4%B9%A0%E9%A2%98/image/1.PNG "cd 操作")
 
   - 运行`git clone git@github.com:skomefen/team_example.git `该操作是从git服务器clone整个git文件
 
-    ![图片](../image/2.png)
+    ![图片](https://github.com/skomefen/team_example/blob/master/git%E4%B9%A0%E9%A2%98/image/2.PNG)
 
   - cd team_example 进入你clone的项目
 
