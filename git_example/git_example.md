@@ -92,8 +92,116 @@
 
 
 
+### git本地中级操作
+
+0. 一些基本操作的补充
+
+      - .gitignore文件的使用。
+
+        这个文件是放在项目目录下，作用是忽略掉一些不必要上传到github上的文件。比如说.class 为后缀的Java编译后文件，一些缓冲文件等等。
+
+        如我们要忽略所有的.class文件，只需要新建.gitignore文件（注，windows是无法直接创建这个文件，可新建txt文件然后另存为.gitignore）在项目下，然后在第一行输入\*.class就可以了。
+
+        具体忽略规则去看群文件pro\_git\_中文版本。学会使用ctrl+f 输入.gitignore快查来快速定位，不详细讲。这个文件一般就创建项目的时候直接去拷别人项目的忽略规则就够用了，很少改。
+
+      - 快速提交命令git commit -a 
+
+        这个命令的作用是把所有追踪过的文件，即不是所有不是Untracked的文件都commit成Unmodify，也就是提交的状态。就不用一个个add文件然后commit了。
+
+        git的命令都会有不同的模式。比如这个-a，输入git help commit 可以查看所有commit的模式。  
+
+        不过出来的都是纯英文，准备好浏览器翻译插件或者有道词典
+
+   - 撤销最后一次提交git commit --amend
+
+     有时候我们提交完了才发现漏掉了几个文件没有加，或者提交信息写错了。想要撤消刚才 的提交操作，可以使用 --amend 选项重新提交：
+
+     如果刚才提交时忘了暂存某些修改，可以先补上暂存操作，然后再运行 --amend 提交：
+     `$ git commit -m 'initial commit'` 
+     `$ git add forgotten_file` 
+     `$ git commit --amend`
+     上面的三条命令最终得到一个提交，第二个提交命令修正了第一个的提交内容，即添加多一个forgotten_file文件
 
 
+
+1. 基本概念的理解
+
+   - 什么git分支（阅读pro\_git\_中文版本53页或者百度）
+   - 理解git分支的工作方式
+   - 思考为何要这样子设计
+
+2. git分支的操作
+
+   - **准备工作**
+       - 新建个新的文件夹，名字叫test_branch
+       - 在git bash里面cd到新建文件夹
+       - 执行git init
+       - touch a1 创建一个a1文件（linux命令来的）
+       - git add a1
+       - git commit -m "add a1"（-m这个是快速提交模式）
+       - touch a2
+       - git add a2
+       - git commit -m "add a2"
+       - git log 这个时候可以看到历史记录里有两个commit，git log显示方式可以定制的，这个不详细说
+
+   - **创建分支**
+       - git branch testing 新建一个testing分支，这个时候的testing分支是从add a2这个commit开始的。但目前还是在master分支，你只是新建了分支没有checkout过去。git bash上的蓝色字就是你所在的分支
+       - git checkout testing 这个时候跳到了testing分支，显示switched to branch 'testing'，蓝色字也变成了testing（注，git checkout -b testing相当于执行上面两个命令，创建并跳到testing分支）
+       - touch t1
+       - vim a1 ，然后输入aaa，按ecs输入:wq退出
+       - git add t1
+       - git commit -a -m "add t1 and change a1" （之前已经追踪过a1，-a模式会自动把a1提交的）你可以注意下面的提示。使用的时候可以多注意提示，可以给到很多信息的
+         ![image](https://github.com/skomefen/team_example/raw/master/git_example/image/9.PNG)
+         意思是 该commit 是testing 分支，commit的SHA-1哈希值前七位为dea8329 commit 名字为 add t1 and change a1
+          2个文件已被改变，其中插入了一行东西
+          创建了文件 t1
+
+   - **跳回原分支**
+       - git checkout master 跳回到原来的master分支
+       - 这个时候观察下你目录下的文件，会发现原来添加的t1和修改的a1部分都不见了。那是因为原来的master当前的commit并没有这些东西。现在还是原来的'add a2'的 commit里
+       - touch a3
+       - git add a3
+       - git commit -m "add a3"
+
+   - **合并分支**
+       - git breach 可以看到目前有两个分支，当前分支是绿色的master
+       - git merge testing 当前分支和testing合并，这个时候会生成新的commit把master最后一个commit和testing最后一个commit的文件合并。编辑commit退出就合并完成了
+       - 查看你的文件夹，你就会发现t1出现了，a1也出现了aaa，所以合并操作就是把两个commit中的文件不同的
+       - git breach 你会发现testing分支还在，因为你只是合并了它不是删除了它
+       - git log 查看日志，你会发现两个分支的5个commit都在（注，太多信息的时候，回车可以看下面的信息，:wq可以退出查看）
+       - git log --graph可以以树的形式查看
+         ![image](https://github.com/skomefen/team_example/raw/master/git_example/image/10.PNG)
+
+       - 这个只是合并没有冲突的情况，当两个分支同时修改一个文件的时候就会出现合并冲突的可能，因为git不知道应该如何合并。这个时候就需要手动处理冲突
+       - git checkout -b conflict_branch 创建分支并跳到该分支
+       - vim a2 输入abcdefg并关闭
+       - git commit -a -m "change a2"
+       - git checkout master
+       - vim a2 原来在conflict_branch的修改不存在了。在第一行输入 ”123456“
+       - git commit -a -m "change a2 with 123456"
+       - git merge conflict_branch
+       - 这个时候显示a2冲突，然后进入（master|MERGING）模式（蓝色字）等待你处理冲突
+       - 这个时候输入git status，显示冲突对象a2。出现同时修改
+       - 我们vim a2看看变成什么样
+         ![image](https://github.com/skomefen/team_example/raw/master/git_example/image/11.PNG)
+         <<<<<< HEAD代表来自HEAD指针所在的commit，因为HEAD指向的分支就是当前分支，所以也是可以当作当前分支的commit
+         />>>>>>> conflict_branch表示要合并的分支。
+         中间=======分割开了他们冲突的部分。
+         你可以全部删掉改成abc123。意思是分别采纳了两个分支冲突内容的一部分。
+         ![image](https://github.com/skomefen/team_example/raw/master/git_example/image/11.PNG)
+
+       - git add a2  重新添加a2
+       - git commit 合并成功
+       - 另外运行 git mergetool 可以用可视化工具来处理冲突。这个自己研究哈。
+
+   - 分支删除
+       - 运行git branch 现在可以看到有三条分支
+       - 运行git log --graph 可以看到现在的分支线
+       - git branch -d testing
+       - git branch -d conflict_branch
+       - 再运行git branch 现在只剩下master分支
+       - 运行git log --graph 发现原来的历史记录都还在的。原来哪些commit并不会因为分支删除而删除。你会发现git倾向于把所有的历史commit都记录在案
+       - 如果未合并的分支是不可以用上面用的-d模式删除。但可以运行git branch -D [分支名] 强制删除。这个自己可以试下。
 
 
 
