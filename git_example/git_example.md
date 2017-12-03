@@ -183,9 +183,10 @@
        - 这个时候显示a2冲突，然后进入（master|MERGING）模式（蓝色字）等待你处理冲突
        - 这个时候输入git status，显示冲突对象a2。出现同时修改
        - 我们vim a2看看变成什么样
+
          ![image](https://github.com/skomefen/team_example/raw/master/git_example/image/11.PNG)
          <<<<<< HEAD代表来自HEAD指针所在的commit，因为HEAD指向的分支就是当前分支，所以也是可以当作当前分支的commit
-         />>>>>>> conflict_branch表示要合并的分支。
+         \>>>>>>> conflict_branch表示要合并的分支。
          中间=======分割开了他们冲突的部分。
          你可以全部删掉改成abc123。意思是分别采纳了两个分支冲突内容的一部分。
          ![image](https://github.com/skomefen/team_example/raw/master/git_example/image/11.PNG)
