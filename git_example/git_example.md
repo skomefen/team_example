@@ -167,34 +167,54 @@
 
    - **合并分支**
        - git breach 可以看到目前有两个分支，当前分支是绿色的master
+
        - git merge testing 当前分支和testing合并，这个时候会生成新的commit把master最后一个commit和testing最后一个commit的文件合并。编辑commit退出就合并完成了
+
        - 查看你的文件夹，你就会发现t1出现了，a1也出现了aaa，所以合并操作就是把两个commit中的文件不同的
+
        - git breach 你会发现testing分支还在，因为你只是合并了它不是删除了它
+
        - git log 查看日志，你会发现两个分支的5个commit都在（注，太多信息的时候，回车可以看下面的信息，:wq可以退出查看）
+
        - git log --graph可以以树的形式查看
          ![image](https://github.com/skomefen/team_example/raw/master/git_example/image/10.PNG)
 
        - 这个只是合并没有冲突的情况，当两个分支同时修改一个文件的时候就会出现合并冲突的可能，因为git不知道应该如何合并。这个时候就需要手动处理冲突
+
        - git checkout -b conflict_branch 创建分支并跳到该分支
+
        - vim a2 输入abcdefg并关闭
+
        - git commit -a -m "change a2"
+
        - git checkout master
+
        - vim a2 原来在conflict_branch的修改不存在了。在第一行输入 ”123456“
+
        - git commit -a -m "change a2 with 123456"
+
        - git merge conflict_branch
+
        - 这个时候显示a2冲突，然后进入（master|MERGING）模式（蓝色字）等待你处理冲突
+
        - 这个时候输入git status，显示冲突对象a2。出现同时修改
+
        - 我们vim a2看看变成什么样
 
+         ​
+
          ![image](https://github.com/skomefen/team_example/raw/master/git_example/image/11.PNG)
+
          <<<<<< HEAD代表来自HEAD指针所在的commit，因为HEAD指向的分支就是当前分支，所以也是可以当作当前分支的commit
          \>>>>>>> conflict_branch表示要合并的分支。
          中间=======分割开了他们冲突的部分。
          你可以全部删掉改成abc123。意思是分别采纳了两个分支冲突内容的一部分。
-         ![image](https://github.com/skomefen/team_example/raw/master/git_example/image/11.PNG)
+         ![image](https://github.com/skomefen/team_example/raw/master/git_example/image/12.PNG)
 
        - git add a2  重新添加a2
+
        - git commit 合并成功
+
        - 另外运行 git mergetool 可以用可视化工具来处理冲突。这个自己研究哈。
 
    - 分支删除
