@@ -42,7 +42,9 @@
 4. 对文件进行基本操作 
   - 运行 git help 查看git指令。
 
-  - 输入指令vim  名字缩写/aaa ，该指令是进入vim编辑器，编辑名字缩写/aaa文件（其实这个是linux bash命令）然后按键盘ins健进入编辑模式，打上helloworld，按ESL退出编辑，输入:wq回车退出vim编辑器。
+  - 输入指令vim  [名字缩写/aaa] 
+
+    该指令是进入vim编辑器，编辑[名字缩写/aaa]文件（其实这个是linux bash命令）然后按键盘ins健进入编辑模式，打上helloworld，按ESL退出编辑，输入:wq回车退出vim编辑器。
 
   - git status 查看刚刚你添加的文件状态此时（尝试按tag键补全指令）
 
@@ -50,7 +52,7 @@
 
     阅读提示，尝试翻译提示（use “git add \<file\>...”to include in what will be committed）灵活应用翻译软件，或者浏览器插件，或者直接百度有道翻译。理解这句话的意思
 
- - git add  你的文件，此时文件应该变成Modified已修改的状态
+ - git add  [名字缩写/aaa]，此时文件应该变成Modified已修改的状态
 
    重复 git status查看此时文件的状态
 
