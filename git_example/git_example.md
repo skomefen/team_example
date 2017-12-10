@@ -217,7 +217,7 @@
 
        - 另外运行 git mergetool 可以用可视化工具来处理冲突。这个自己研究哈。
 
-   - 分支删除
+   - **分支删除**
        - 运行git branch 现在可以看到有三条分支
        - 运行git log --graph 可以看到现在的分支线
        - git branch -d testing
@@ -225,6 +225,53 @@
        - 再运行git branch 现在只剩下master分支
        - 运行git log --graph 发现原来的历史记录都还在的。原来哪些commit并不会因为分支删除而删除。你会发现git倾向于把所有的历史commit都记录在案
        - 如果未合并的分支是不可以用上面用的-d模式删除。但可以运行git branch -D [分支名] 强制删除。这个自己可以试下。
+
+### 结合github远程仓库操作
+
+1. 基本概念的理解（查看pro_git 57页和31页）
+   - 理解什么是远程仓库  
+   - 理解什么是远程分支
+   - 远程分支和本地分支的区别
+
+2. 模拟项目开发时远程仓库操作
+   - 新建一个文件夹，remote_repository
+   - git init 初始化
+   - 随随便便弄些东西commit
+   - 在自己github上新建项目，同样起名remote_repository
+   - 直接复制github上的命令，在git bash 上运行，这样就会新建远程连接叫origin到你这个github仓库上，push你本地仓库数据库到该github仓库
+     ![image](https://github.com/skomefen/team_example/raw/master/git_example/image/13.PNG)
+     
+   - 新建abc文件夹，然后clone你这个remote_repository（注意，克隆其实相当于新建一个同名文件，创建一个origin远程分支连接到远程仓库master上）
+   - 回原来文件夹，新建个文件，新建commit bbb并push到远程仓库
+   - 回到新建的文件夹，新建commit  aaa
+   - 这个时候出现了错误，原因是因为你commit的时候，远程仓库的master已经更新了最新的commit，而你当前commit的指针指向前一个commit的时候还是旧的commit。所以你必须pull最新的文件
+   - git pull origin
+   - git push origin 
+   - 我们相当于模拟了两个人同时有一个远程仓库的推送权限，项目如何合作。当然，因为我们两边修改的不是同一个文件，新建的aaa commit直接指向了bbb commit 然后推送到了远程仓库。如果两边修改同一个文件会如何？
+   - 原来文件夹，新建abc.txt  输入abc123 然后commit 并push origin
+   - abc文件夹，同样新建abc.txt 输入123abc 然后commit 并push origin
+     ![image](https://github.com/skomefen/team_example/raw/master/git_example/image/14.PNG)
+     
+     提示 merge 失败，pull操作其实是相当于先fetch远程仓库上的分支，本地remote上关联的分支merge对应的远程分支。也就是本地分支master merge远程分支origin/master失败（origin是关联master的）。
+     merge失败的原因是存在冲突文件。也就是我们上面修改的abc.txt
+   
+   - git status 查看冲突文件
+   - 修改冲突文件（不一定要用vim修改，其实直接拿记事本打开就行了，然后你发现原来用vim查看有换行，用txt打开换行就没了。因为windows换行符跟linux换行符不一样。所以就没换行了。）
+   - add abc.txt 并commit 提交
+   - push到仓库。其实你会发现处理远程分支冲突跟本地处理分支冲突差不多。
+   
+3. 新建和删除远程分支
+   - **事实上，我们之前推送和分支的时候，git remote add origin [远程仓库地址]，其实是把本地的master分支通过远程分支origin绑定到了远程仓库的master分支。而无论如何，我们push origin的时候只可以把本地master分支的数据push到远程仓库的master分支，也就是origin/master分支。所以其实远程仓库只有一个master分支**。如图
+    ![image](https://github.com/skomefen/team_example/raw/master/git_example/image/15.PNG)
+    9个commits ，一个 branch（master分支） 0个标签
+   - 我们现在开始新建个远程仓库分支。事实上，仓库里的远程分支是把本地分支推送上去才有的。不推送本地分支，远程仓库就没有本地分支的东西的。
+   - git branch aaa新建个本地分支aaa
+   - git push origin aaa:aaa 这里意思是push origin远程仓库，把本地的aaa分支（:号前面）推送到远程分支aaa（:号后面）这个操作等价于git push origin aaa。以后也请用后一个操作。
+   - 查看Github上是不是branch多了一个 aaa分支。
+   - 然后我们删除这个分支
+   - git push origin :aaa （这个操作就是把啥都没有推送到origin远程仓库aaa上，因为冒号前面啥都没有）
+   - git 上会显示分支删除的
+
 
 
 
